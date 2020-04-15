@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 from . import models
 
@@ -13,7 +14,7 @@ class UserProfilesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfiles
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'name', 'password','token')
         extra_kwargs = {'password': {'write_only':True}}
 
     def create(self, validated_data):
@@ -28,3 +29,10 @@ class UserProfilesSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class ProfileFeedItemViewSet(serializers.ModelSerializer):
+    """A serializer for our profile feed item."""
+    class Meta:
+        model = models.ProfileFeedItems
+        fields = ('id','user_profile','status_text','create_on')
+        extra_kwargs = {'user_profile' :{'write_only':True}}

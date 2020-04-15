@@ -13,7 +13,7 @@ class UserProfilesManager(BaseUserManager):
             raise ValuesError('Users must have an email address.')
         email = self.normalize_email(email)
         user = self.model(email = email, name = name)
-
+        #token = Token.objects.create(user=...)
         user.set_password(password)
         user.save(using=self._db)
 
@@ -51,3 +51,14 @@ class UserProfiles(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class ProfileFeedItems(models.Model):
+
+    user_profile = models.ForeignKey('UserProfiles', on_delete = models.CASCADE)
+    status_text = models.CharField(max_length = 200)
+    create_on = models.DateTimeField(auto_now_add= True)
+
+    def __str__(self):
+        """Return the model as a string."""
+        return self.status_text
